@@ -1,0 +1,120 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// Class to represent a ticket
+class Ticket {
+    private static int idCounter = 1000;  // Auto-increment ticket ID
+    private int ticketId;
+    private String passengerName;
+    private String trainName;
+    private String source;
+    private String destination;
+
+    public Ticket(String passengerName, String trainName, String source, String destination) {
+        this.ticketId = idCounter++;
+        this.passengerName = passengerName;
+        this.trainName = trainName;
+        this.source = source;
+        this.destination = destination;
+    }
+
+    public int getTicketId() {
+        return ticketId;
+    }
+
+    public void displayTicket() {
+        System.out.println("Ticket ID   : " + ticketId);
+        System.out.println("Passenger   : " + passengerName);
+        System.out.println("Train       : " + trainName);
+        System.out.println("From        : " + source);
+        System.out.println("To          : " + destination);
+        System.out.println("-----------------------------------");
+    }
+}
+
+// Main class
+public class RailwayReservationSystem {
+    private static ArrayList<Ticket> ticketList = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int choice;
+
+        do {
+            System.out.println("\n===== Railway Reservation System =====");
+            System.out.println("1. Book Ticket");
+            System.out.println("2. View All Bookings");
+            System.out.println("3. Cancel Ticket");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline character
+
+            switch (choice) {
+                case 1:
+                    bookTicket();
+                    break;
+                case 2:
+                    viewTickets();
+                    break;
+                case 3:
+                    cancelTicket();
+                    break;
+                case 4:
+                    System.out.println("Thank you for using the system!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+
+        } while (choice != 4);
+    }
+
+    // Method to book a new ticket
+    private static void bookTicket() {
+        System.out.print("Enter passenger name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter train name: ");
+        String train = scanner.nextLine();
+        System.out.print("Enter source station: ");
+        String source = scanner.nextLine();
+        System.out.print("Enter destination station: ");
+        String destination = scanner.nextLine();
+
+        Ticket ticket = new Ticket(name, train, source, destination);
+        ticketList.add(ticket);
+        System.out.println("Ticket booked successfully! Ticket ID: " + ticket.getTicketId());
+    }
+
+    // Method to view all tickets
+    private static void viewTickets() {
+        if (ticketList.isEmpty()) {
+            System.out.println("No bookings available.");
+            return;
+        }
+        System.out.println("\n--- All Bookings ---");
+        for (Ticket ticket : ticketList) {
+            ticket.displayTicket();
+        }
+    }
+
+    // Method to cancel a ticket
+    private static void cancelTicket() {
+        System.out.print("Enter Ticket ID to cancel: ");
+        int id = scanner.nextInt();
+        boolean removed = false;
+
+        for (int i = 0; i < ticketList.size(); i++) {
+            if (ticketList.get(i).getTicketId() == id) {
+                ticketList.remove(i);
+                System.out.println("Ticket canceled successfully.");
+                removed = true;
+                break;
+            }
+        }
+
+        if (!removed) {
+            System.out.println("Ticket not found.");
+        }
+    }
+}
